@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: e51b2e5f0d876c544a94a22db14c3187
+guid: 47148878dd565e241ba2e85ffbb52442
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: 3094330708855449807
-    second: jog_fwd
+    second: start_walk_l_90
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -77,21 +77,21 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: jog_fwd
+      name: start_walk_l_90
       takeName: Untitled
       internalID: 0
       firstFrame: 0
-      lastFrame: 42
+      lastFrame: 51
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 1
-      loopBlendPositionY: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1

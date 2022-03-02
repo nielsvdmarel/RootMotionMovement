@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: e51b2e5f0d876c544a94a22db14c3187
+guid: c1de82167d9365e4f99722daae5ea6b8
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: 3094330708855449807
-    second: jog_fwd
+    second: start_sprint_r_180
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -21,49 +21,7 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Untitled' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'pelvis' has scale animation that will be
-      discarded.\n\t'spine_01' has scale animation that will be discarded.\n\t'spine_02'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'spine_02'
-      has scale animation that will be discarded.\n\t'spine_03' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'spine_03'
-      has scale animation that will be discarded.\n\t'neck_01' has scale animation
-      that will be discarded.\n\t'head' has scale animation that will be discarded.\n\t'clavicle_l'
-      has scale animation that will be discarded.\n\t'upperarm_l' has scale animation
-      that will be discarded.\n\t'lowerarm_l' has scale animation that will be discarded.\n\t'hand_l'
-      has translation animation that will be discarded.\n\t'hand_l' has scale animation
-      that will be discarded.\n\t'index_01_l' has scale animation that will be discarded.\n\t'index_02_l'
-      has scale animation that will be discarded.\n\t'index_03_l' has scale animation
-      that will be discarded.\n\t'middle_01_l' has scale animation that will be discarded.\n\t'middle_02_l'
-      has scale animation that will be discarded.\n\t'middle_03_l' has scale animation
-      that will be discarded.\n\t'pinky_01_l' has scale animation that will be discarded.\n\t'pinky_02_l'
-      has scale animation that will be discarded.\n\t'pinky_03_l' has scale animation
-      that will be discarded.\n\t'ring_01_l' has scale animation that will be discarded.\n\t'ring_02_l'
-      has scale animation that will be discarded.\n\t'ring_03_l' has scale animation
-      that will be discarded.\n\t'thumb_01_l' has scale animation that will be discarded.\n\t'thumb_02_l'
-      has scale animation that will be discarded.\n\t'thumb_03_l' has scale animation
-      that will be discarded.\n\t'clavicle_r' has scale animation that will be discarded.\n\t'upperarm_r'
-      has scale animation that will be discarded.\n\t'lowerarm_r' has scale animation
-      that will be discarded.\n\t'hand_r' has scale animation that will be discarded.\n\t'middle_01_r'
-      has scale animation that will be discarded.\n\t'middle_02_r' has scale animation
-      that will be discarded.\n\t'middle_03_r' has scale animation that will be discarded.\n\t'pinky_01_r'
-      has scale animation that will be discarded.\n\t'pinky_02_r' has scale animation
-      that will be discarded.\n\t'pinky_03_r' has scale animation that will be discarded.\n\t'ring_01_r'
-      has scale animation that will be discarded.\n\t'ring_02_r' has scale animation
-      that will be discarded.\n\t'ring_03_r' has scale animation that will be discarded.\n\t'thumb_01_r'
-      has scale animation that will be discarded.\n\t'thumb_02_r' has scale animation
-      that will be discarded.\n\t'thumb_03_r' has scale animation that will be discarded.\n\t'index_01_r'
-      has scale animation that will be discarded.\n\t'index_02_r' has scale animation
-      that will be discarded.\n\t'index_03_r' has scale animation that will be discarded.\n\t'thigh_l'
-      has scale animation that will be discarded.\n\t'calf_l' has translation animation
-      that will be discarded.\n\t'calf_l' has scale animation that will be discarded.\n\t'foot_l'
-      has translation animation that will be discarded.\n\t'foot_l' has scale animation
-      that will be discarded.\n\t'ball_l' has scale animation that will be discarded.\n\t'thigh_r'
-      has scale animation that will be discarded.\n\t'calf_r' has translation animation
-      that will be discarded.\n\t'calf_r' has scale animation that will be discarded.\n\t'foot_r'
-      has translation animation that will be discarded.\n\t'foot_r' has scale animation
-      that will be discarded.\n\t'ball_r' has scale animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -77,25 +35,25 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: jog_fwd
+      name: start_sprint_r_180
       takeName: Untitled
       internalID: 0
       firstFrame: 0
-      lastFrame: 42
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 1
+      loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 1
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000

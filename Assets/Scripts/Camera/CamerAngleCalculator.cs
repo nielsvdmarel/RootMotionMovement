@@ -12,15 +12,28 @@ public class CamerAngleCalculator : MonoBehaviour
     Camera mainCamera;
 
     [SerializeField]
+    Animator m_Animator;
+
+    [SerializeField]
     public InputAction playerControls;
+
+    [SerializeField]
+    public InputAction isRunning;
 
     [SerializeField]
     private float DesiredDirection;
 
     [SerializeField]
-    Vector3 m_Input;
+    private float m_PlayerSpeed;
+
     [SerializeField]
-    public Vector2 moveVal;
+    bool m_PlayerRunning = false;
+
+    [SerializeField]
+    Vector2 m_Input2D;
+
+    [SerializeField]
+    Vector3 m_Input;
 
     [SerializeField]
     bool CanRotateWithCamera = false;
@@ -28,23 +41,36 @@ public class CamerAngleCalculator : MonoBehaviour
     private void OnEnable()
     {
         playerControls.Enable();
+        isRunning.Enable();
+        
     }
     private void OnDisable()
     {
         playerControls.Disable();
+        isRunning.Disable();
     }
 
     void Start()
     {
         Player = this.gameObject;
         mainCamera = Camera.main;
+        m_Animator = this.GetComponent<Animator>();
     }
 
     void Update()
     {
         CalculateDesiredAngle();
         //transform.Rotate(0,0.4f,0);
+        CalculateMovementSpeed();
         TestRotatePlayerTowardsCamera();
+        UpdateAnimator();
+
+        if(isRunning.ReadValue<float>() == 1) {
+            m_PlayerRunning = true;
+        }
+        else {
+            m_PlayerRunning = false;
+        }
     }
 
     private static float WrapAngle(float angle)
@@ -60,11 +86,11 @@ public class CamerAngleCalculator : MonoBehaviour
     private void CalculateDesiredAngle() {
         Vector3 delta;
         delta = mainCamera.transform.rotation.eulerAngles.normalized - Player.transform.rotation.eulerAngles.normalized;
-        Vector2 input2D = playerControls.ReadValue<Vector2>();
-        m_Input = new Vector3(input2D.y, input2D.x, 0);
+        m_Input2D = playerControls.ReadValue<Vector2>();
+        m_Input = new Vector3(m_Input2D.y, m_Input2D.x, 0);
 
 
-        float target_rotation_ = Mathf.Atan2(input2D.x, input2D.y) * Mathf.Rad2Deg; // + mainCamera.transform.eulerAngles.y;
+        float target_rotation_ = Mathf.Atan2(m_Input2D.x, m_Input2D.y) * Mathf.Rad2Deg; // + mainCamera.transform.eulerAngles.y;
         Vector3 InputTargetRotation = new Vector3(0, target_rotation_, 0);
         //  float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, target_rotation_, ref rotation_velocity_, rotation_smooth_time);
         float rotationX;
@@ -100,5 +126,16 @@ public class CamerAngleCalculator : MonoBehaviour
         if (CanRotateWithCamera) {
             transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
         }
+    }
+
+    public void CalculateMovementSpeed() {
+        m_PlayerSpeed = Mathf.Clamp(Mathf.Abs(m_Input2D.x) + Mathf.Abs(m_Input2D.y), 0, 1);
+        if (m_PlayerRunning) {
+            m_PlayerSpeed *= 2;
+        }
+    }
+
+    public void UpdateAnimator() {
+        m_Animator.SetFloat("Direction", DesiredDirection);
     }
 }
