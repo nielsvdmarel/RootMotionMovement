@@ -9,7 +9,7 @@ public class CamerAngleCalculator : MonoBehaviour
     GameObject Player;
 
     [SerializeField]
-    Camera mainCamera;
+    Camera m_Camera;
 
     [SerializeField]
     Animator m_Animator;
@@ -24,6 +24,11 @@ public class CamerAngleCalculator : MonoBehaviour
     private float DesiredDirection;
 
     [SerializeField]
+    private float FixedDesiredDirection;
+    [SerializeField]
+    bool canUpdateDirection = true;
+
+    [SerializeField]
     private float m_PlayerSpeed;
 
     [SerializeField]
@@ -36,7 +41,12 @@ public class CamerAngleCalculator : MonoBehaviour
     Vector3 m_Input;
 
     [SerializeField]
-    bool CanRotateWithCamera = false;
+    public bool CanRotateWithCamera = false;
+
+    [Header("updated")]
+    public Vector3 m_DesiredManualRotation;
+
+    public float m_RotationSpeed;
 
     private void OnEnable()
     {
@@ -53,7 +63,7 @@ public class CamerAngleCalculator : MonoBehaviour
     void Start()
     {
         Player = this.gameObject;
-        mainCamera = Camera.main;
+        m_Camera = Camera.main;
         m_Animator = this.GetComponent<Animator>();
     }
 
@@ -62,7 +72,7 @@ public class CamerAngleCalculator : MonoBehaviour
         CalculateDesiredAngle();
         //transform.Rotate(0,0.4f,0);
         CalculateMovementSpeed();
-        TestRotatePlayerTowardsCamera();
+        ManualPlayerRotation();
         UpdateAnimator();
 
         if(isRunning.ReadValue<float>() == 1) {
@@ -70,6 +80,23 @@ public class CamerAngleCalculator : MonoBehaviour
         }
         else {
             m_PlayerRunning = false;
+        }
+
+        if (canUpdateDirection)
+        {
+            if(m_Input2D.x != 0 || m_Input2D.y != 0)
+            {
+                canUpdateDirection = false;
+                FixedDesiredDirection = DesiredDirection;
+                m_Animator.SetFloat("Direction", DesiredDirection);
+            }
+        }
+        else
+        {
+            if(m_Input2D.x == 0 && m_Input2D.y == 0)
+            {
+                canUpdateDirection = true;
+            }
         }
     }
 
@@ -85,7 +112,7 @@ public class CamerAngleCalculator : MonoBehaviour
 
     private void CalculateDesiredAngle() {
         Vector3 delta;
-        delta = mainCamera.transform.rotation.eulerAngles.normalized - Player.transform.rotation.eulerAngles.normalized;
+        delta = m_Camera.transform.rotation.eulerAngles.normalized - Player.transform.rotation.eulerAngles.normalized;
         m_Input2D = playerControls.ReadValue<Vector2>();
         m_Input = new Vector3(m_Input2D.y, m_Input2D.x, 0);
 
@@ -97,9 +124,9 @@ public class CamerAngleCalculator : MonoBehaviour
         float rotationY;
         float rotationZ;
 
-        rotationX = mainCamera.transform.eulerAngles.x;
-        rotationY = mainCamera.transform.eulerAngles.y;
-        rotationZ = mainCamera.transform.eulerAngles.z;
+        rotationX = m_Camera.transform.eulerAngles.x;
+        rotationY = m_Camera.transform.eulerAngles.y;
+        rotationZ = m_Camera.transform.eulerAngles.z;
 
         Vector3 trueCamRotation = new Vector3(WrapAngle(rotationX), WrapAngle(rotationY), WrapAngle(rotationZ));
         trueCamRotation.x *= -1;
@@ -122,9 +149,27 @@ public class CamerAngleCalculator : MonoBehaviour
         DesiredDirection = FinalDelta.y;
     }
 
-    public void TestRotatePlayerTowardsCamera() {
+    public void ManualPlayerRotation() {
         if (CanRotateWithCamera) {
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
+
+            //Can be done in the same calculaton as setting the m_DesiredMoveDirection
+            Vector3 forward = m_Camera.transform.forward;
+            Vector3 right = m_Camera.transform.right;
+
+            //Can be done in the same calculaton as setting the m_DesiredMoveDirection
+            forward.y = 0f;
+            right.y = 0f;
+
+            //Can be done in the same calculaton as setting the m_DesiredMoveDirection
+            forward.Normalize();
+            right.Normalize();
+
+            m_DesiredManualRotation = forward * m_Input2D.y + right * m_Input2D.x;
+            //m_DesiredMoveDirection.Normalize();
+
+            //transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(m_DesiredManualRotation), Time.deltaTime * m_RotationSpeed);
         }
     }
 
@@ -136,6 +181,7 @@ public class CamerAngleCalculator : MonoBehaviour
     }
 
     public void UpdateAnimator() {
-        m_Animator.SetFloat("Direction", DesiredDirection);
+       
+        m_Animator.SetFloat("Speed", m_PlayerSpeed);
     }
 }
