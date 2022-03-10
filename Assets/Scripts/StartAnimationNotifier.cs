@@ -21,7 +21,7 @@ public class StartAnimationNotifier : StateMachineBehaviour
         if (stateInfo.normalizedTime >= 0.7f && !animator.IsInTransition(0))
         {
             if(camAngleCal != null) {
-               // camAngleCal.CanRotateWithCamera = true;
+                camAngleCal.CanRotateWithCamera = true;
             }
         }
     }

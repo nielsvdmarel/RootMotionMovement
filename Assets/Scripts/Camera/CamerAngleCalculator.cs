@@ -32,6 +32,15 @@ public class CamerAngleCalculator : MonoBehaviour
     private float m_PlayerSpeed;
 
     [SerializeField]
+    private float m_SmoothPlayerSpeed;
+
+    [SerializeField]
+    private float m_LerpSpeed;
+
+    [SerializeField]
+    private float m_LastRecordedSpeed;
+
+    [SerializeField]
     bool m_PlayerRunning = false;
 
     [SerializeField]
@@ -65,14 +74,20 @@ public class CamerAngleCalculator : MonoBehaviour
         Player = this.gameObject;
         m_Camera = Camera.main;
         m_Animator = this.GetComponent<Animator>();
+        m_PlayerSpeed = 0;
+        m_SmoothPlayerSpeed = 0;
     }
 
     void Update()
     {
+
         CalculateDesiredAngle();
         //transform.Rotate(0,0.4f,0);
         CalculateMovementSpeed();
         ManualPlayerRotation();
+
+        m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);
+
         UpdateAnimator();
 
         if(isRunning.ReadValue<float>() == 1) {
@@ -178,10 +193,16 @@ public class CamerAngleCalculator : MonoBehaviour
         if (m_PlayerRunning) {
             m_PlayerSpeed *= 2;
         }
+
+        if(m_PlayerSpeed != 0) {
+            m_LastRecordedSpeed = m_PlayerSpeed;
+        }
     }
 
     public void UpdateAnimator() {
        
         m_Animator.SetFloat("Speed", m_PlayerSpeed);
+        m_Animator.SetFloat("SmoothSpeed", m_SmoothPlayerSpeed);
+        m_Animator.SetFloat("LastRecordedSpeed", m_LastRecordedSpeed);
     }
 }
