@@ -21,7 +21,7 @@ public class CamerAngleCalculator : MonoBehaviour
     public InputAction isRunning;
 
     [SerializeField]
-    private float DesiredDirection;
+    public float m_DesiredDirection;
 
     [SerializeField]
     private float FixedDesiredDirection;
@@ -57,6 +57,16 @@ public class CamerAngleCalculator : MonoBehaviour
 
     public float m_RotationSpeed;
 
+    [SerializeField]
+    private Transform head;
+
+    [Header("Turn In place")]
+    [SerializeField]
+    private float m_IdleRotation;
+    [SerializeField]
+    private bool m_RotationSet;
+    [SerializeField]
+    private float m_IdleRotationDistance;
     private void OnEnable()
     {
         playerControls.Enable();
@@ -85,7 +95,7 @@ public class CamerAngleCalculator : MonoBehaviour
         //transform.Rotate(0,0.4f,0);
         CalculateMovementSpeed();
         ManualPlayerRotation();
-
+        CalCulateDifferenceFromIdle();
         m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);
 
         UpdateAnimator();
@@ -102,8 +112,8 @@ public class CamerAngleCalculator : MonoBehaviour
             if(m_Input2D.x != 0 || m_Input2D.y != 0)
             {
                 canUpdateDirection = false;
-                FixedDesiredDirection = DesiredDirection;
-                m_Animator.SetFloat("Direction", DesiredDirection);
+                FixedDesiredDirection = m_DesiredDirection;
+                m_Animator.SetFloat("Direction", m_DesiredDirection);
             }
         }
         else
@@ -115,6 +125,10 @@ public class CamerAngleCalculator : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+       
+    }
     private static float WrapAngle(float angle)
     {
         angle %= 360;
@@ -161,7 +175,7 @@ public class CamerAngleCalculator : MonoBehaviour
         FinalDelta.y = WrapAngle(InputCamPlayer.y);
         FinalDelta.z = WrapAngle(InputCamPlayer.z);
 
-        DesiredDirection = FinalDelta.y;
+        m_DesiredDirection = FinalDelta.y;
     }
 
     public void ManualPlayerRotation() {
@@ -190,6 +204,7 @@ public class CamerAngleCalculator : MonoBehaviour
 
     public void CalculateMovementSpeed() {
         m_PlayerSpeed = Mathf.Clamp(Mathf.Abs(m_Input2D.x) + Mathf.Abs(m_Input2D.y), 0, 1);
+        //m_PlayerSpeed -= 0.5f; to walk
         if (m_PlayerRunning) {
             m_PlayerSpeed *= 2;
         }
@@ -204,5 +219,29 @@ public class CamerAngleCalculator : MonoBehaviour
         m_Animator.SetFloat("Speed", m_PlayerSpeed);
         m_Animator.SetFloat("SmoothSpeed", m_SmoothPlayerSpeed);
         m_Animator.SetFloat("LastRecordedSpeed", m_LastRecordedSpeed);
+    }
+
+    public void OnAnimatorIK(int layerIndex) {
+        m_Animator.SetLookAtPosition(Vector3.right);
+    }
+
+    public void CalCulateDifferenceFromIdle()
+    {
+        if (m_Input2D.x == 0 && m_Input2D.y == 0)
+        {
+            if (!m_RotationSet)
+            {
+                //Reset
+                m_IdleRotation = m_DesiredDirection;
+                m_RotationSet = true;
+            }
+            m_IdleRotationDistance = m_DesiredDirection + m_IdleRotation;
+           // m_IdleRotationDistance =  WrapAngle(m_IdleRotationDistance);
+        }
+
+        if (m_Input2D.x != 0 || m_Input2D.y != 0)
+        {
+            m_RotationSet = false;
+        }
     }
 }
