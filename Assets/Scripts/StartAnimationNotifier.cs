@@ -19,10 +19,10 @@ public class StartAnimationNotifier : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 
-        if (stateInfo.normalizedTime >= 0.8f && !animator.IsInTransition(0))
+        if (stateInfo.normalizedTime >= 0.6f && !animator.IsInTransition(0))
         {
             if(camAngleCal != null) {
-                camAngleCal.CanRotateWithCamera = true;
+                camAngleCal.AnimEnabledCustomRotation = true;
             }
         }
     }

@@ -58,7 +58,9 @@ public class CamerAngleCalculator : MonoBehaviour
     [Header("camera extra")]
 
     [SerializeField]
-    public bool CanRotateWithCamera = false;
+    public bool AnimEnabledCustomRotation = false;
+    [SerializeField]
+    public bool m_EnableCustomRotation = false;
 
     [Header("updated")]
     public Vector3 m_DesiredManualRotation;
@@ -99,6 +101,8 @@ public class CamerAngleCalculator : MonoBehaviour
         m_Animator = this.GetComponent<Animator>();
         m_PlayerSpeed = 0;
         m_SmoothPlayerSpeed = 0;
+
+        //Time.timeScale = 0.1f;
     }
 
     void Update()
@@ -203,26 +207,29 @@ public class CamerAngleCalculator : MonoBehaviour
     }
 
     public void ManualPlayerRotation() {
-        if (CanRotateWithCamera) {
+        if (AnimEnabledCustomRotation)
+        {
+            if (m_EnableCustomRotation)
+            {
+                //Can be done in the same calculaton as setting the m_DesiredMoveDirection
+                Vector3 forward = m_Camera.transform.forward;
+                Vector3 right = m_Camera.transform.right;
 
-            //Can be done in the same calculaton as setting the m_DesiredMoveDirection
-            Vector3 forward = m_Camera.transform.forward;
-            Vector3 right = m_Camera.transform.right;
+                //Can be done in the same calculaton as setting the m_DesiredMoveDirection
+                forward.y = 0f;
+                right.y = 0f;
 
-            //Can be done in the same calculaton as setting the m_DesiredMoveDirection
-            forward.y = 0f;
-            right.y = 0f;
+                //Can be done in the same calculaton as setting the m_DesiredMoveDirection
+                forward.Normalize();
+                right.Normalize();
 
-            //Can be done in the same calculaton as setting the m_DesiredMoveDirection
-            forward.Normalize();
-            right.Normalize();
+                m_DesiredManualRotation = forward * m_Input2D.y + right * m_Input2D.x;
+                //m_DesiredMoveDirection.Normalize();
 
-            m_DesiredManualRotation = forward * m_Input2D.y + right * m_Input2D.x;
-            //m_DesiredMoveDirection.Normalize();
+                //transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
 
-            //transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
-
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(m_DesiredManualRotation), Time.deltaTime * m_RotationSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(m_DesiredManualRotation), Time.deltaTime * m_RotationSpeed);
+            }
         }
     }
 

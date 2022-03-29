@@ -15,7 +15,7 @@ public class DisableCamRotatation : StateMachineBehaviour
         {
             camAngleCal = player.GetComponent<CamerAngleCalculator>();
         }
-        camAngleCal.CanRotateWithCamera = false;
+        camAngleCal.AnimEnabledCustomRotation = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
