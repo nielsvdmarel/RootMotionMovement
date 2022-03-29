@@ -20,8 +20,13 @@ public class CamerAngleCalculator : MonoBehaviour
     [SerializeField]
     public InputAction isRunning;
 
+    [Header("Main Root motion variables")]
+
     [SerializeField]
     public float m_DesiredDirection;
+
+    [SerializeField]
+    public int m_NormalizedRotationDirection;
 
     [SerializeField]
     private float FixedDesiredDirection;
@@ -43,11 +48,14 @@ public class CamerAngleCalculator : MonoBehaviour
     [SerializeField]
     bool m_PlayerRunning = false;
 
-    [SerializeField]
-    Vector2 m_Input2D;
+    [Header("extra input")]
+
+    public Vector2 m_Input2D;
 
     [SerializeField]
     Vector3 m_Input;
+
+    [Header("camera extra")]
 
     [SerializeField]
     public bool CanRotateWithCamera = false;
@@ -67,6 +75,11 @@ public class CamerAngleCalculator : MonoBehaviour
     private bool m_RotationSet;
     [SerializeField]
     private float m_IdleRotationDistance;
+
+    [Header("Idle Turning")]
+    [SerializeField]
+    private bool m_InPlaceTurnsEnabled;
+
     private void OnEnable()
     {
         playerControls.Enable();
@@ -96,6 +109,7 @@ public class CamerAngleCalculator : MonoBehaviour
         CalculateMovementSpeed();
         ManualPlayerRotation();
         CalCulateDifferenceFromIdle();
+        HandleIdleTurns();
         m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);
 
         UpdateAnimator();
@@ -176,6 +190,16 @@ public class CamerAngleCalculator : MonoBehaviour
         FinalDelta.z = WrapAngle(InputCamPlayer.z);
 
         m_DesiredDirection = FinalDelta.y;
+
+        //Calculate normalized direction rotation, used for idle rotation direction
+        if(m_DesiredDirection > 0) {
+            m_NormalizedRotationDirection = 1;
+        }else if(m_DesiredDirection < 0) {
+            m_NormalizedRotationDirection = -1;
+        }
+        else if(m_DesiredDirection == 0) {
+            m_NormalizedRotationDirection = 0;
+        }
     }
 
     public void ManualPlayerRotation() {
@@ -219,6 +243,7 @@ public class CamerAngleCalculator : MonoBehaviour
         m_Animator.SetFloat("Speed", m_PlayerSpeed);
         m_Animator.SetFloat("SmoothSpeed", m_SmoothPlayerSpeed);
         m_Animator.SetFloat("LastRecordedSpeed", m_LastRecordedSpeed);
+        m_Animator.SetInteger("TurningDirection", m_NormalizedRotationDirection);
     }
 
     public void OnAnimatorIK(int layerIndex) {
@@ -242,6 +267,21 @@ public class CamerAngleCalculator : MonoBehaviour
         if (m_Input2D.x != 0 || m_Input2D.y != 0)
         {
             m_RotationSet = false;
+        }
+    }
+
+    void HandleIdleTurns() {
+        if (m_InPlaceTurnsEnabled) {
+            if (m_Input2D.x == 0 || m_Input2D.y == 0)
+            {
+                if(Mathf.Abs(m_DesiredDirection) >= 90.0f){
+                    m_Animator.SetBool("TurnInPlace", true);
+                }
+                else
+                {
+                    m_Animator.SetBool("TurnInPlace", false);
+                }
+            }
         }
     }
 }

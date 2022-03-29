@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 1481.7451, g: 1835.5391, b: 2429.8105, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19860,6 +19860,7 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   m_DesiredDirection: 0
+  m_NormalizedRotationDirection: 0
   FixedDesiredDirection: 0
   canUpdateDirection: 1
   m_PlayerSpeed: 0
@@ -19876,6 +19877,7 @@ MonoBehaviour:
   m_IdleRotation: 0
   m_RotationSet: 0
   m_IdleRotationDistance: 0
+  m_InPlaceTurnsEnabled: 1
 --- !u!143 &1641253898
 CharacterController:
   m_ObjectHideFlags: 0
@@ -19906,10 +19908,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4dd907dd6e5f64d947365ea6a7a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IkActive: 1
-  m_LookObject: {fileID: 927456382}
-  m_lookWeight: 2
   m_CamAngleCalc: {fileID: 0}
+  m_IkActive: 1
+  m_lookWeight: 0
+  BlendLerpSpeed: 4
+  m_LookObject: {fileID: 927456382}
+  m_LookWeightTarget: 0
+  m_MaxWeightValue: 0.7
+  m_MinWeightValue: 0
+  LookWhileIdle: 1
 --- !u!1001 &1641650572
 PrefabInstance:
   m_ObjectHideFlags: 0
