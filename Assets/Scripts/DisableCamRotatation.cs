@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class DisableCamRotatation : StateMachineBehaviour
 {
-
     GameObject player;
-    CamerAngleCalculator camAngleCal;
     RootMotionMovement m_rootMotionMovement;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         player = animator.gameObject;
-        if (player != null)
-        {
-            camAngleCal = player.GetComponent<CamerAngleCalculator>();
+        if (player != null) {
             m_rootMotionMovement = player.GetComponent<RootMotionMovement>();
         }
-        camAngleCal.AnimEnabledCustomRotation = false;
         m_rootMotionMovement.AnimEnabledCustomRotation = false;
     }
 

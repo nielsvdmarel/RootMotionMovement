@@ -5,26 +5,45 @@ using TMPro;
 
 public class DebugPlayerDisplay : MonoBehaviour
 {
-    [SerializeField]
-    CamerAngleCalculator m_CamAngleCalculator;
+    private RootMotionMovement m_RootMotionMovement;
+    private bool b_PlayerDebugEnabled = false;
+   
+    public TextMeshProUGUI HeaderText;
+    public TextMeshProUGUI DesiredDirectionText;
 
-    public TextMeshProUGUI textDisplay;
+    [Header("Main player variables")]
+    public TextMeshProUGUI DesiredDirectionValue;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         GameObject player = GameObject.FindWithTag("Player");
-        if(player != null)
-        {
-            m_CamAngleCalculator = player.GetComponent<CamerAngleCalculator>();
+        if(player != null) {
+            m_RootMotionMovement = player.GetComponent<RootMotionMovement>();
+            if(m_RootMotionMovement != null) {
+                b_PlayerDebugEnabled = m_RootMotionMovement.b_DebugModeEnabled;
+                EnableDebugHUD(b_PlayerDebugEnabled);
+            }
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        float test = m_CamAngleCalculator.m_DesiredDirection;
-        test = Mathf.RoundToInt(test);
-        textDisplay.text = test.ToString();
+    void Update() {
+        CheckForDebugUpdate();
+        if (b_PlayerDebugEnabled) {
+            float DirectionValue = m_RootMotionMovement.m_DesiredDirection;
+            DirectionValue = Mathf.RoundToInt(DirectionValue);
+            DesiredDirectionValue.text = DirectionValue.ToString();
+        }
+    }
+
+    void CheckForDebugUpdate() {
+        if (b_PlayerDebugEnabled != m_RootMotionMovement.b_DebugModeEnabled) {
+            b_PlayerDebugEnabled = m_RootMotionMovement.b_DebugModeEnabled;
+            EnableDebugHUD(b_PlayerDebugEnabled);
+        }
+    }
+
+    void EnableDebugHUD(bool enabled) {
+    HeaderText.enabled = enabled;;
+    DesiredDirectionText.enabled = enabled; ;
+    DesiredDirectionValue.enabled = enabled;
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 
 public class RootMotionMovement : MonoBehaviour
 {
+    [Header("Debug Controls")]
+    public bool b_DebugModeEnabled = false;
+
     [Header("Main component references")]
     [SerializeField]
     Camera m_Camera;
@@ -31,7 +34,7 @@ public class RootMotionMovement : MonoBehaviour
     private float m_StartDesiredDirection;
 
     [SerializeField]
-    bool canUpdateDirection = true;
+    bool b_CanUpdateStartDirection = true;
     
     /// <summary>
     /// direct player speed regarding input
@@ -95,39 +98,22 @@ public class RootMotionMovement : MonoBehaviour
     void Update() {
         CalculateDesiredAngle(); //Calculating desired angle with Camera, input and player rotation
         CalculateInputMovementSpeed(); //Calculating the desired movement value using input.
-        //SetStartDirection();
+        SetStartDirection();
         ManualPlayerRotation(); //Responsible for rotational movement after the start/stops.
         HandleIdleTurns(); //Responsible for handling idle turning when rotating on idle.
         HandleRunningInput();
-        //Lerping needed variables
-        m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);
-
-        if (canUpdateDirection)
-        {
-            if (m_Input2D.x != 0 || m_Input2D.y != 0)
-            {
-                canUpdateDirection = false;
-                //FixedDesiredDirection = m_DesiredDirection;
-                m_Animator.SetFloat("Direction", m_DesiredDirection);
-            }
-        }
-        else
-        {
-            if (m_Input2D.x == 0 && m_Input2D.y == 0)
-            {
-                canUpdateDirection = true;
-            }
-        }
-
+        
+        m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);//Lerping needed variables
 
         UpdateAnimator(); //Updating the animator with all the calculated variables.
     }
-    public void UpdateAnimator()
-    {
+
+    public void UpdateAnimator() {
         m_Animator.SetFloat("Speed", m_PlayerSpeed);
         m_Animator.SetFloat("SmoothSpeed", m_SmoothPlayerSpeed);
         m_Animator.SetFloat("LastRecordedSpeed", m_LastRecordedSpeed);
         m_Animator.SetInteger("TurningDirection", m_NormalizedRotationDirection);
+        m_Animator.SetFloat("Direction", m_DesiredDirection);
     }
 
     private void CalculateDesiredAngle() {
@@ -190,15 +176,28 @@ public class RootMotionMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Function for defining the start direction into the animator, when start has been detected. 
+    /// This value needs to be constant during start anim, otherwise blending issues occur between different angled starts.
+    /// </summary>
     private void SetStartDirection() {
-        if (CanUpdateDirection()) {
-            m_StartDesiredDirection = m_DesiredDirection;
-            
-            m_Animator.SetFloat("Direction", m_DesiredDirection);
-            
-        }
+            if (b_CanUpdateStartDirection) {
+                if (!IsInputZero()) {
+                    b_CanUpdateStartDirection = false;
+                m_StartDesiredDirection = m_DesiredDirection;
+                    m_Animator.SetFloat("StartDirection", m_StartDesiredDirection);
+                }
+            }
+            else {
+                if (IsInputZero()) {
+                    b_CanUpdateStartDirection = true;
+                }
+            }
     }
 
+    /// <summary>
+    /// Function to enable rotation based on the camera and input.
+    /// </summary>
     public void ManualPlayerRotation() {
         if (AnimEnabledCustomRotation) {
             if (m_EnableCustomRotation) {
@@ -243,6 +242,9 @@ public class RootMotionMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Function to read values of the running input, using the new input system
+    /// </summary>
     void HandleRunningInput() {
         if (isRunning.ReadValue<float>() == 1) {
             m_PlayerRunning = true;
@@ -252,7 +254,11 @@ public class RootMotionMovement : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// function to wrap input angle to usable directional angle
+    /// </summary>
+    /// <param name="angle"></param>
+    /// <returns> returns input angle, translated to fit between negative and positive 180 </returns>
     private static float WrapAngle(float angle) {
         angle %= 360;
         if (angle > 180)
@@ -262,7 +268,11 @@ public class RootMotionMovement : MonoBehaviour
         return angle;
     }
 
-    bool CanUpdateDirection() {
+    /// <summary>
+    /// Function to check if input is equal to zero
+    /// </summary>
+    /// <returns> returns boolean, equal to the state of input </returns>
+    bool IsInputZero() {
         if (m_Input2D.x != 0 || m_Input2D.y != 0) {
             return false;
         }

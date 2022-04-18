@@ -7,7 +7,7 @@ public class HeadController : MonoBehaviour
     [Header("Main references")]
     protected Animator m_Animator;
     [SerializeField]
-    CamerAngleCalculator m_CamAngleCalc;
+    RootMotionMovement m_RootMotionMovement;
 
     [Header("Animation variables")]
     [SerializeField]
@@ -36,13 +36,13 @@ public class HeadController : MonoBehaviour
     private void Start()
     {
         m_Animator = this.GetComponent<Animator>();
-        m_CamAngleCalc = this.GetComponent<CamerAngleCalculator>();
+        m_RootMotionMovement = this.GetComponent<RootMotionMovement>();
     }
 
     public void Update() {
         if (LookWhileIdle)
         {
-            if (m_CamAngleCalc.m_Input2D.x == 0 && m_CamAngleCalc.m_Input2D.y == 0)
+            if (m_RootMotionMovement.m_Input2D.x == 0 && m_RootMotionMovement.m_Input2D.y == 0)
             {
                 m_CanLook = true;
             }
