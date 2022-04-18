@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 1481.7754, g: 1835.8867, b: 2430.4492, a: 1}
+  m_IndirectSpecularColor: {r: 1481.7451, g: 1835.5391, b: 2429.8105, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13639,7 +13639,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1103159054}
-  m_LocalRotation: {x: 0.07188016, y: -0.000000017161872, z: 0.0000000012367973, w: 0.9974133}
+  m_LocalRotation: {x: 0.07188016, y: 0.000000017161872, z: -0.0000000012367973, w: 0.9974133}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -13720,7 +13720,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112845729}
-  m_LocalRotation: {x: 0.10806369, y: -0.000000017105618, z: 0.0000000018593849, w: 0.994144}
+  m_LocalRotation: {x: 0.10806369, y: 0.000000017105624, z: -0.0000000018593854, w: 0.994144}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -20266,7 +20266,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1641253895}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca00735e411918843b56a93faa62e253, type: 3}
   m_Name: 
@@ -20378,6 +20378,105 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.05, z: 0}
+--- !u!114 &1641253899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641253895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f94dd17b8cee94badf2dbf32c1027d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 0}
+  m_Animator: {fileID: 0}
+  playerControls:
+    m_Name: Player Controls
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 8624abfd-504d-48d6-9291-e11b45e3ffd4
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: PlayerMovement
+      m_Id: bb9aa45b-9b85-4f4f-89ef-e0d2a1b5b668
+      m_Path: 2DVector
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Player Controls
+      m_Flags: 4
+    - m_Name: up
+      m_Id: c481800b-bee9-40a2-a9b1-8a1bbba2adfe
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Player Controls
+      m_Flags: 8
+    - m_Name: down
+      m_Id: f1398ddc-edd6-4ce5-ae46-ce93f7c74f35
+      m_Path: <Keyboard>/s
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Player Controls
+      m_Flags: 8
+    - m_Name: left
+      m_Id: 8f9a80c8-70bc-4fe9-b183-331890aa5d33
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Player Controls
+      m_Flags: 8
+    - m_Name: right
+      m_Id: fc7a67cf-a471-4ff8-aacb-54e6ef11f5cf
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Player Controls
+      m_Flags: 8
+    m_Flags: 0
+  isRunning:
+    m_Name: Is Running
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: ad0d0716-258d-439e-a830-3b66842b12ab
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 78a5aec0-d732-477b-ba46-34754ac739c9
+      m_Path: <Keyboard>/shift
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Is Running
+      m_Flags: 0
+    m_Flags: 0
+  m_Input2D: {x: 0, y: 0}
+  m_Input: {x: 0, y: 0, z: 0}
+  m_DesiredDirection: 0
+  m_NormalizedRotationDirection: 0
+  m_StartDesiredDirection: 0
+  canUpdateDirection: 1
+  m_PlayerSpeed: 0
+  m_SmoothPlayerSpeed: 0
+  m_LastRecordedSpeed: 0
+  m_LerpSpeed: 4
+  m_PlayerRunning: 0
+  AnimEnabledCustomRotation: 0
+  m_EnableCustomRotation: 1
+  m_DesiredManualRotation: {x: 0, y: 0, z: 0}
+  m_RotationSpeed: 8
+  m_InPlaceTurnsEnabled: 1
+  m_IdleRotation: 0
+  m_RotationSet: 0
+  head: {fileID: 1017029582}
 --- !u!114 &1641253900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23553,7 +23652,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813490176}
-  m_LocalRotation: {x: 0.089962855, y: 0.000000017431807, z: -0.0000000015212326, w: 0.99594516}
+  m_LocalRotation: {x: 0.089962855, y: -0.00000001743181, z: 0.0000000015212328, w: 0.99594516}
   m_LocalPosition: {x: -2.501, y: 5.692, z: -9.785}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -28988,7 +29087,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2103295291}
-  m_LocalRotation: {x: 0.089962855, y: 0.00000001713661, z: -0.000000001547935, w: 0.99594516}
+  m_LocalRotation: {x: 0.089962855, y: -0.000000017136614, z: 0.0000000015479353, w: 0.99594516}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

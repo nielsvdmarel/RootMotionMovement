@@ -6,12 +6,14 @@ public class StartAnimationNotifier : StateMachineBehaviour
 {
     GameObject player;
     CamerAngleCalculator camAngleCal;
+    RootMotionMovement m_RootMotionMovement;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         player = animator.gameObject;
         if (player != null) {
             camAngleCal = player.GetComponent<CamerAngleCalculator>();
+            m_RootMotionMovement = player.GetComponent<RootMotionMovement>();
         }
     }
 
@@ -23,6 +25,7 @@ public class StartAnimationNotifier : StateMachineBehaviour
         {
             if(camAngleCal != null) {
                 camAngleCal.AnimEnabledCustomRotation = true;
+                m_RootMotionMovement.AnimEnabledCustomRotation = true;
             }
         }
     }

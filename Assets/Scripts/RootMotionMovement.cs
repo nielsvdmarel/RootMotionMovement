@@ -3,163 +3,136 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CamerAngleCalculator : MonoBehaviour
+public class RootMotionMovement : MonoBehaviour
 {
-    [SerializeField]
-    GameObject Player;
-
+    [Header("Main component references")]
     [SerializeField]
     Camera m_Camera;
 
     [SerializeField]
     Animator m_Animator;
 
+    [Header("Input")]
     [SerializeField]
     public InputAction playerControls;
-
     [SerializeField]
     public InputAction isRunning;
+    public Vector2 m_Input2D;
+    [SerializeField]
+    private Vector3 m_Input;
 
     [Header("Main Root motion variables")]
 
     [SerializeField]
     public float m_DesiredDirection;
-
     [SerializeField]
     public int m_NormalizedRotationDirection;
-
     [SerializeField]
-    private float FixedDesiredDirection;
+    private float m_StartDesiredDirection;
+
     [SerializeField]
     bool canUpdateDirection = true;
-
+    
+    /// <summary>
+    /// direct player speed regarding input
+    /// </summary>
     [SerializeField]
     private float m_PlayerSpeed;
 
     [SerializeField]
     private float m_SmoothPlayerSpeed;
 
-    [SerializeField]
-    private float m_LerpSpeed;
-
+    /// <summary>
+    /// last set input speed while moving, used for stop animation
+    /// </summary>
     [SerializeField]
     private float m_LastRecordedSpeed;
 
     [SerializeField]
-    bool m_PlayerRunning = false;
-
-    [Header("extra input")]
-
-    public Vector2 m_Input2D;
+    private float m_LerpSpeed;
 
     [SerializeField]
-    Vector3 m_Input;
+    bool m_PlayerRunning = false;
 
-    [Header("camera extra")]
-
+    [Header("Camera variables")]
     [SerializeField]
     public bool AnimEnabledCustomRotation = false;
     [SerializeField]
     public bool m_EnableCustomRotation = false;
 
-    [Header("updated")]
+    [Header("Target values")]
     public Vector3 m_DesiredManualRotation;
-
     public float m_RotationSpeed;
 
-    [SerializeField]
-    private Transform head;
-
     [Header("Turn In place")]
+    [SerializeField]
+    private bool m_InPlaceTurnsEnabled;
     [SerializeField]
     private float m_IdleRotation;
     [SerializeField]
     private bool m_RotationSet;
+
+    [Header("Head retargeting")]
     [SerializeField]
-    private float m_IdleRotationDistance;
+    private Transform head;
 
-    [Header("Idle Turning")]
-    [SerializeField]
-    private bool m_InPlaceTurnsEnabled;
-
-    private void OnEnable()
-    {
-        playerControls.Enable();
-        isRunning.Enable();
-        
-    }
-    private void OnDisable()
-    {
-        playerControls.Disable();
-        isRunning.Disable();
-    }
-
-    void Start()
-    {
-        Player = this.gameObject;
+    void Start() {
         m_Camera = Camera.main;
         m_Animator = this.GetComponent<Animator>();
         m_PlayerSpeed = 0;
         m_SmoothPlayerSpeed = 0;
-
-        //Time.timeScale = 0.1f;
+    }
+    private void OnEnable() {
+        playerControls.Enable();
+        isRunning.Enable();
     }
 
-    void Update()
-    {
+    private void OnDisable() {
+        playerControls.Disable();
+        isRunning.Disable();
+    }
 
-        CalculateDesiredAngle();
-        //transform.Rotate(0,0.4f,0);
-        CalculateMovementSpeed();
-        ManualPlayerRotation();
-        CalCulateDifferenceFromIdle();
-        HandleIdleTurns();
+    void Update() {
+        CalculateDesiredAngle(); //Calculating desired angle with Camera, input and player rotation
+        CalculateInputMovementSpeed(); //Calculating the desired movement value using input.
+        //SetStartDirection();
+        ManualPlayerRotation(); //Responsible for rotational movement after the start/stops.
+        HandleIdleTurns(); //Responsible for handling idle turning when rotating on idle.
+        HandleRunningInput();
+        //Lerping needed variables
         m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);
-
-        UpdateAnimator();
-
-        if(isRunning.ReadValue<float>() == 1) {
-            m_PlayerRunning = true;
-        }
-        else {
-            m_PlayerRunning = false;
-        }
 
         if (canUpdateDirection)
         {
-            if(m_Input2D.x != 0 || m_Input2D.y != 0)
+            if (m_Input2D.x != 0 || m_Input2D.y != 0)
             {
                 canUpdateDirection = false;
-                FixedDesiredDirection = m_DesiredDirection;
+                //FixedDesiredDirection = m_DesiredDirection;
                 m_Animator.SetFloat("Direction", m_DesiredDirection);
             }
         }
         else
         {
-            if(m_Input2D.x == 0 && m_Input2D.y == 0)
+            if (m_Input2D.x == 0 && m_Input2D.y == 0)
             {
                 canUpdateDirection = true;
             }
         }
-    }
 
-    private void LateUpdate()
-    {
-       
+
+        UpdateAnimator(); //Updating the animator with all the calculated variables.
     }
-    private static float WrapAngle(float angle)
+    public void UpdateAnimator()
     {
-        angle %= 360;
-        if (angle > 180)
-            return angle - 360;
-        else if (angle < -180)
-            return angle + 360;
-        return angle;
+        m_Animator.SetFloat("Speed", m_PlayerSpeed);
+        m_Animator.SetFloat("SmoothSpeed", m_SmoothPlayerSpeed);
+        m_Animator.SetFloat("LastRecordedSpeed", m_LastRecordedSpeed);
+        m_Animator.SetInteger("TurningDirection", m_NormalizedRotationDirection);
     }
 
     private void CalculateDesiredAngle() {
         Vector3 delta;
-        delta = m_Camera.transform.rotation.eulerAngles.normalized - Player.transform.rotation.eulerAngles.normalized;
+        delta = m_Camera.transform.rotation.eulerAngles.normalized - this.transform.rotation.eulerAngles.normalized;
         m_Input2D = playerControls.ReadValue<Vector2>();
         m_Input = new Vector3(m_Input2D.y, m_Input2D.x, 0);
 
@@ -195,21 +168,40 @@ public class CamerAngleCalculator : MonoBehaviour
         m_DesiredDirection = FinalDelta.y;
 
         //Calculate normalized direction rotation, used for idle rotation direction
-        if(m_DesiredDirection > 0) {
+        if (m_DesiredDirection > 0) {
             m_NormalizedRotationDirection = 1;
-        }else if(m_DesiredDirection < 0) {
+        }
+        else if (m_DesiredDirection < 0) {
             m_NormalizedRotationDirection = -1;
         }
-        else if(m_DesiredDirection == 0) {
+        else if (m_DesiredDirection == 0) {
             m_NormalizedRotationDirection = 0;
         }
     }
 
+    public void CalculateInputMovementSpeed() {
+        m_PlayerSpeed = Mathf.Clamp(Mathf.Abs(m_Input2D.x) + Mathf.Abs(m_Input2D.y), 0, 1);
+        //m_PlayerSpeed -= 0.5f; to walk
+        if (m_PlayerRunning) {
+            m_PlayerSpeed *= 2;
+        }
+        if (m_PlayerSpeed != 0) {
+            m_LastRecordedSpeed = m_PlayerSpeed;
+        }
+    }
+
+    private void SetStartDirection() {
+        if (CanUpdateDirection()) {
+            m_StartDesiredDirection = m_DesiredDirection;
+            
+            m_Animator.SetFloat("Direction", m_DesiredDirection);
+            
+        }
+    }
+
     public void ManualPlayerRotation() {
-        if (AnimEnabledCustomRotation)
-        {
-            if (m_EnableCustomRotation)
-            {
+        if (AnimEnabledCustomRotation) {
+            if (m_EnableCustomRotation) {
                 //Can be done in the same calculaton as setting the m_DesiredMoveDirection
                 Vector3 forward = m_Camera.transform.forward;
                 Vector3 right = m_Camera.transform.right;
@@ -223,64 +215,24 @@ public class CamerAngleCalculator : MonoBehaviour
                 right.Normalize();
 
                 m_DesiredManualRotation = forward * m_Input2D.y + right * m_Input2D.x;
-                //m_DesiredMoveDirection.Normalize();
 
                 //transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
-
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(m_DesiredManualRotation), Time.deltaTime * m_RotationSpeed);
             }
         }
     }
 
-    public void CalculateMovementSpeed() {
-        m_PlayerSpeed = Mathf.Clamp(Mathf.Abs(m_Input2D.x) + Mathf.Abs(m_Input2D.y), 0, 1);
-        //m_PlayerSpeed -= 0.5f; to walk
-        if (m_PlayerRunning) {
-            m_PlayerSpeed *= 2;
-        }
-
-        if(m_PlayerSpeed != 0) {
-            m_LastRecordedSpeed = m_PlayerSpeed;
-        }
-    }
-
-    public void UpdateAnimator() {
-       
-        m_Animator.SetFloat("Speed", m_PlayerSpeed);
-        m_Animator.SetFloat("SmoothSpeed", m_SmoothPlayerSpeed);
-        m_Animator.SetFloat("LastRecordedSpeed", m_LastRecordedSpeed);
-        m_Animator.SetInteger("TurningDirection", m_NormalizedRotationDirection);
-    }
-
-    public void OnAnimatorIK(int layerIndex) {
-        m_Animator.SetLookAtPosition(Vector3.right);
-    }
-
-    public void CalCulateDifferenceFromIdle()
+    /// <summary>
+    /// Functionality behind handling the in place idle turns
+    /// </summary>
+    void HandleIdleTurns()
     {
-        if (m_Input2D.x == 0 && m_Input2D.y == 0)
+        if (m_InPlaceTurnsEnabled)
         {
-            if (!m_RotationSet)
-            {
-                //Reset
-                m_IdleRotation = m_DesiredDirection;
-                m_RotationSet = true;
-            }
-            m_IdleRotationDistance = m_DesiredDirection + m_IdleRotation;
-           // m_IdleRotationDistance =  WrapAngle(m_IdleRotationDistance);
-        }
-
-        if (m_Input2D.x != 0 || m_Input2D.y != 0)
-        {
-            m_RotationSet = false;
-        }
-    }
-
-    void HandleIdleTurns() {
-        if (m_InPlaceTurnsEnabled) {
             if (m_Input2D.x == 0 || m_Input2D.y == 0)
             {
-                if(Mathf.Abs(m_DesiredDirection) >= 90.0f){
+                if (Mathf.Abs(m_DesiredDirection) >= 90.0f)
+                {
                     m_Animator.SetBool("TurnInPlace", true);
                 }
                 else
@@ -289,5 +241,31 @@ public class CamerAngleCalculator : MonoBehaviour
                 }
             }
         }
+    }
+
+    void HandleRunningInput() {
+        if (isRunning.ReadValue<float>() == 1) {
+            m_PlayerRunning = true;
+        }
+        else {
+            m_PlayerRunning = false;
+        }
+    }
+
+
+    private static float WrapAngle(float angle) {
+        angle %= 360;
+        if (angle > 180)
+            return angle - 360;
+        else if (angle < -180)
+            return angle + 360;
+        return angle;
+    }
+
+    bool CanUpdateDirection() {
+        if (m_Input2D.x != 0 || m_Input2D.y != 0) {
+            return false;
+        }
+        return true;
     }
 }

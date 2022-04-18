@@ -7,6 +7,7 @@ public class DisableCamRotatation : StateMachineBehaviour
 
     GameObject player;
     CamerAngleCalculator camAngleCal;
+    RootMotionMovement m_rootMotionMovement;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -14,8 +15,10 @@ public class DisableCamRotatation : StateMachineBehaviour
         if (player != null)
         {
             camAngleCal = player.GetComponent<CamerAngleCalculator>();
+            m_rootMotionMovement = player.GetComponent<RootMotionMovement>();
         }
         camAngleCal.AnimEnabledCustomRotation = false;
+        m_rootMotionMovement.AnimEnabledCustomRotation = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
