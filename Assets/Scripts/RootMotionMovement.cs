@@ -15,6 +15,9 @@ public class RootMotionMovement : MonoBehaviour
     [SerializeField]
     Animator m_Animator;
 
+    [SerializeField]
+    CharacterController m_CharacterController;
+
     [Header("Input")]
     [SerializeField]
     public InputAction playerControls;
@@ -75,6 +78,11 @@ public class RootMotionMovement : MonoBehaviour
     [SerializeField]
     private bool m_RotationSet;
 
+    [Header("Jumping")]
+    public bool m_IsGrounded; //Used for keeping grounded
+    private float m_VerticalVelocity; //Used for keeping grounded
+    private Vector3 m_MoveVector; //Used for keeping grounded
+
     [Header("Head retargeting")]
     [SerializeField]
     private Transform head;
@@ -82,6 +90,7 @@ public class RootMotionMovement : MonoBehaviour
     void Start() {
         m_Camera = Camera.main;
         m_Animator = this.GetComponent<Animator>();
+        m_CharacterController = this.GetComponent<CharacterController>();
         m_PlayerSpeed = 0;
         m_SmoothPlayerSpeed = 0;
     }
@@ -106,6 +115,27 @@ public class RootMotionMovement : MonoBehaviour
         m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);//Lerping needed variables
 
         UpdateAnimator(); //Updating the animator with all the calculated variables.
+
+       
+    }
+
+    private void FixedUpdate()
+    {
+        /*
+                m_IsGrounded = m_CharacterController.isGrounded;
+                if (m_IsGrounded)
+                {
+                    m_VerticalVelocity -= 0;
+                }
+                else
+                {
+                    m_VerticalVelocity -= 2;
+                }
+                m_MoveVector = new Vector3(0, m_VerticalVelocity, 0);
+                m_CharacterController.Move(m_MoveVector);
+        */
+
+        Debug.Log(m_CharacterController.isGrounded);
     }
 
     public void UpdateAnimator() {
