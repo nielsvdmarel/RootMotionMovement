@@ -83,6 +83,10 @@ public class RootMotionMovement : MonoBehaviour
     private float m_VerticalVelocity; //Used for keeping grounded
     private Vector3 m_MoveVector; //Used for keeping grounded
 
+    [SerializeField]
+    private bool m_GroundSphereColliding;
+    private float GroundDistance;
+
     [Header("Head retargeting")]
     [SerializeField]
     private Transform head;
@@ -111,7 +115,6 @@ public class RootMotionMovement : MonoBehaviour
         ManualPlayerRotation(); //Responsible for rotational movement after the start/stops.
         HandleIdleTurns(); //Responsible for handling idle turning when rotating on idle.
         HandleRunningInput();
-        
         m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);//Lerping needed variables
 
         UpdateAnimator(); //Updating the animator with all the calculated variables.
@@ -121,8 +124,8 @@ public class RootMotionMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        /*
-                m_IsGrounded = m_CharacterController.isGrounded;
+        UpdateGrounded();
+        /*   
                 if (m_IsGrounded)
                 {
                     m_VerticalVelocity -= 0;
@@ -134,8 +137,6 @@ public class RootMotionMovement : MonoBehaviour
                 m_MoveVector = new Vector3(0, m_VerticalVelocity, 0);
                 m_CharacterController.Move(m_MoveVector);
         */
-
-        Debug.Log(m_CharacterController.isGrounded);
     }
 
     public void UpdateAnimator() {
@@ -308,4 +309,18 @@ public class RootMotionMovement : MonoBehaviour
         }
         return true;
     }
+
+    void UpdateGrounded() {
+        //RaycastDownwards check
+        RaycastHit groundedHit;
+        if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out groundedHit)) {
+            GroundDistance = groundedHit.distance;
+            //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * groundedHit.distance, Color.yellow);
+        }
+        
+        m_IsGrounded = m_CharacterController.isGrounded;
+    }
+
+   
+   
 }

@@ -8,12 +8,16 @@ public class DebugPlayerDisplay : MonoBehaviour
 {
     private RootMotionMovement m_RootMotionMovement;
     private bool b_PlayerDebugEnabled = false;
-   
+    private List<GameObject> m_AllDebugUIElements;
+
+    [Header("Main player texts")]
     public TextMeshProUGUI HeaderText;
     public TextMeshProUGUI DesiredDirectionText;
+    public TextMeshProUGUI m_PlayerIsGroundedText;
 
     [Header("Main player variables")]
     public TextMeshProUGUI DesiredDirectionValue;
+    public TextMeshProUGUI m_PlayerIsGroundedValue;
 
     [Header("Player indicator arrows")]
     [SerializeField]
@@ -30,6 +34,17 @@ public class DebugPlayerDisplay : MonoBehaviour
     }
 
     void Start() {
+        m_AllDebugUIElements = new List<GameObject>();
+
+        //Add all elements for easy enabling/disabling.
+        m_AllDebugUIElements.Add(HeaderText.gameObject);
+        m_AllDebugUIElements.Add(DesiredDirectionText.gameObject);
+        m_AllDebugUIElements.Add(m_PlayerIsGroundedText.gameObject);
+        m_AllDebugUIElements.Add(DesiredDirectionValue.gameObject);
+        m_AllDebugUIElements.Add(m_PlayerIsGroundedValue.gameObject);
+        m_AllDebugUIElements.Add(ForwardArrow.gameObject);
+        m_AllDebugUIElements.Add(m_DirectionalArrow.gameObject);
+
         m_RootMotionMovement = this.GetComponent<RootMotionMovement>();
         if (m_RootMotionMovement != null) {
             b_PlayerDebugEnabled = m_RootMotionMovement.b_DebugModeEnabled;
@@ -40,13 +55,17 @@ public class DebugPlayerDisplay : MonoBehaviour
     void Update() {
         CheckForDebugUpdate();
         if (b_PlayerDebugEnabled) {
+            //Directional value update:
             float DirectionValue = m_RootMotionMovement.m_DesiredDirection;
             DirectionValue = Mathf.RoundToInt(DirectionValue);
             DesiredDirectionValue.text = DirectionValue.ToString();
+
+            // IsGrounded Update
+            m_PlayerIsGroundedValue.text = m_RootMotionMovement.m_IsGrounded.ToString();
+            SetTextColorOnBoolean(m_PlayerIsGroundedValue, m_RootMotionMovement.m_IsGrounded);
+
             //Arrows
             UpdateDirectionalArrow();
-
-            //Arc
         }
     }
 
@@ -58,14 +77,18 @@ public class DebugPlayerDisplay : MonoBehaviour
     }
 
     void EnableDebugElements(bool enabled) {
-        //HUD
-        HeaderText.enabled = enabled;
-        DesiredDirectionText.enabled = enabled;
-        DesiredDirectionValue.enabled = enabled;
+        foreach (var item in m_AllDebugUIElements) {
+            item.SetActive(enabled);
+        }
+    }
 
-        //Objects
-        ForwardArrow.SetActive(enabled);
-        m_DirectionalArrow.SetActive(enabled);
+    /// <summary>
+    /// Function for setting specific texts color to either red or green depending on boolean value
+    /// </summary>
+    /// <param name="text"> Text element to change color </param>
+    /// <param name="value"> Boolean value to use</param>
+    void SetTextColorOnBoolean(TextMeshProUGUI text, bool value) {
+        text.color = value ? Color.green : Color.red;
     }
 
     void UpdateDirectionalArrow() {
