@@ -80,12 +80,17 @@ public class RootMotionMovement : MonoBehaviour
 
     [Header("Jumping")]
     public bool m_IsGrounded; //Used for keeping grounded
+    public bool m_RayCastGrounded;
     private float m_VerticalVelocity; //Used for keeping grounded
     private Vector3 m_MoveVector; //Used for keeping grounded
 
-    [SerializeField]
     private bool m_GroundSphereColliding;
+
+    [SerializeField]
     private float GroundDistance;
+
+    [SerializeField]
+    private float m_groundedMinDistance;
 
     [Header("Head retargeting")]
     [SerializeField]
@@ -315,7 +320,15 @@ public class RootMotionMovement : MonoBehaviour
         RaycastHit groundedHit;
         if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out groundedHit)) {
             GroundDistance = groundedHit.distance;
-            //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * groundedHit.distance, Color.yellow);
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * groundedHit.distance, Color.yellow);
+        }
+
+        if(GroundDistance < m_groundedMinDistance) {
+            m_RayCastGrounded = true;
+        }
+        else
+        {
+            m_RayCastGrounded = false;
         }
         
         m_IsGrounded = m_CharacterController.isGrounded;
