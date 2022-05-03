@@ -113,6 +113,9 @@ public class RootMotionMovement : MonoBehaviour
     [SerializeField]
     private bool m_IsJumping;
 
+    [SerializeField]
+    private float m_JumpingSpeed;
+
     [Header("Head retargeting")]
     [SerializeField]
     private Transform head;
@@ -351,6 +354,14 @@ public class RootMotionMovement : MonoBehaviour
             return false;
         }
         return true;
+
+        
+    }
+
+    public void SetJumpingSpeed() {
+        Debug.Log("jump speed set");
+        m_JumpingSpeed = m_PlayerSpeed;
+        m_Animator.SetFloat("JumpingSpeed", m_JumpingSpeed);
     }
 
     void HandleJump() {
