@@ -15,11 +15,13 @@ public class DebugPlayerDisplay : MonoBehaviour
     public TextMeshProUGUI DesiredDirectionText;
     public TextMeshProUGUI m_PlayerIsGroundedText;
     public TextMeshProUGUI m_PlayerRaycastIsGroundedText;
+    public TextMeshProUGUI m_PlayerFinalGroundedText;
 
     [Header("Main player variables")]
     public TextMeshProUGUI DesiredDirectionValue;
     public TextMeshProUGUI m_PlayerIsGroundedValue;
     public TextMeshProUGUI m_PlayerRaycastIsGroundedValue;
+    public TextMeshProUGUI m_PlayerFinalGroundedValue;
 
     [Header("Player indicator arrows")]
     [SerializeField]
@@ -48,6 +50,8 @@ public class DebugPlayerDisplay : MonoBehaviour
         m_AllDebugUIElements.Add(m_DirectionalArrow.gameObject);
         m_AllDebugUIElements.Add(m_PlayerRaycastIsGroundedText.gameObject);
         m_AllDebugUIElements.Add(m_PlayerRaycastIsGroundedValue.gameObject);
+        m_AllDebugUIElements.Add(m_PlayerFinalGroundedText.gameObject);
+        m_AllDebugUIElements.Add(m_PlayerFinalGroundedValue.gameObject);
 
         m_RootMotionMovement = this.GetComponent<RootMotionMovement>();
         if (m_RootMotionMovement != null) {
@@ -70,6 +74,9 @@ public class DebugPlayerDisplay : MonoBehaviour
 
             m_PlayerRaycastIsGroundedValue.text = m_RootMotionMovement.m_RayCastGrounded.ToString();
             SetTextColorOnBoolean(m_PlayerRaycastIsGroundedValue, m_RootMotionMovement.m_RayCastGrounded);
+
+            m_PlayerFinalGroundedValue.text = m_RootMotionMovement.m_FinalGrounded.ToString();
+            SetTextColorOnBoolean(m_PlayerFinalGroundedValue, m_RootMotionMovement.m_FinalGrounded);
 
             //Arrows
             UpdateDirectionalArrow();

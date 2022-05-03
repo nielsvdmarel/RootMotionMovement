@@ -23,6 +23,8 @@ public class RootMotionMovement : MonoBehaviour
     public InputAction playerControls;
     [SerializeField]
     public InputAction isRunning;
+    public InputAction m_JumpControls;
+
     public Vector2 m_Input2D;
     [SerializeField]
     private Vector3 m_Input;
@@ -78,19 +80,38 @@ public class RootMotionMovement : MonoBehaviour
     [SerializeField]
     private bool m_RotationSet;
 
-    [Header("Jumping")]
+    [Header("Grounded")]
     public bool m_IsGrounded; //Used for keeping grounded
     public bool m_RayCastGrounded;
+    public bool m_FeetRayCastGrounded;
+    public bool m_FinalGrounded;
+
     private float m_VerticalVelocity; //Used for keeping grounded
     private Vector3 m_MoveVector; //Used for keeping grounded
 
     private bool m_GroundSphereColliding;
 
     [SerializeField]
-    private float GroundDistance;
+    private Transform m_LeftFeet;
+    [SerializeField]
+    private Transform m_RightFeet;
 
     [SerializeField]
-    private float m_groundedMinDistance;
+    private float m_GroundDistance;
+    [SerializeField]
+    private float m_LFGroundDistance;
+    [SerializeField]
+    private float m_RFGroundDistance;
+
+    [SerializeField]
+    private float m_GroundedMinDistance;
+
+    [SerializeField]
+    private float m_FeetGroundMinDistance;
+
+    [Header("Jumping")]
+    [SerializeField]
+    private bool m_IsJumping;
 
     [Header("Head retargeting")]
     [SerializeField]
@@ -106,11 +127,13 @@ public class RootMotionMovement : MonoBehaviour
     private void OnEnable() {
         playerControls.Enable();
         isRunning.Enable();
+        m_JumpControls.Enable();
     }
 
     private void OnDisable() {
         playerControls.Disable();
         isRunning.Disable();
+        m_JumpControls.Disable();
     }
 
     void Update() {
@@ -120,6 +143,7 @@ public class RootMotionMovement : MonoBehaviour
         ManualPlayerRotation(); //Responsible for rotational movement after the start/stops.
         HandleIdleTurns(); //Responsible for handling idle turning when rotating on idle.
         HandleRunningInput();
+        HandleJump();
         m_SmoothPlayerSpeed = Mathf.Lerp(m_SmoothPlayerSpeed, m_PlayerSpeed, m_LerpSpeed * Time.deltaTime);//Lerping needed variables
 
         UpdateAnimator(); //Updating the animator with all the calculated variables.
@@ -150,6 +174,20 @@ public class RootMotionMovement : MonoBehaviour
         m_Animator.SetFloat("LastRecordedSpeed", m_LastRecordedSpeed);
         m_Animator.SetInteger("TurningDirection", m_NormalizedRotationDirection);
         m_Animator.SetFloat("Direction", m_DesiredDirection);
+        m_Animator.SetBool("IsGrounded", m_FinalGrounded);
+        m_Animator.SetBool("IsJumping", m_IsJumping);
+    }
+
+    public void ReachedPeak() {
+        Debug.Log("reached peak jump");
+        m_Animator.SetTrigger("ReachedPeakJump");
+        m_Animator.SetBool("ReachedPeakBool", true);
+    }
+
+    public void ResetJumpPeak() {
+        Debug.Log("Reset jump peak");
+        m_Animator.ResetTrigger("ReachedPeakJump");
+        m_Animator.SetBool("ReachedPeakBool", false);
     }
 
     private void CalculateDesiredAngle() {
@@ -315,15 +353,45 @@ public class RootMotionMovement : MonoBehaviour
         return true;
     }
 
+    void HandleJump() {
+        if(m_JumpControls.ReadValue<float>() == 1) {
+            m_IsJumping = true;
+        }
+        else {
+            m_IsJumping = false;
+        }
+    }
+
     void UpdateGrounded() {
-        //RaycastDownwards check
-        RaycastHit groundedHit;
-        if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out groundedHit)) {
-            GroundDistance = groundedHit.distance;
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * groundedHit.distance, Color.yellow);
+
+        //Midle position raycast check
+        RaycastHit PlayyerMidleGroundedHit;
+        if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out PlayyerMidleGroundedHit)) {
+            m_GroundDistance = PlayyerMidleGroundedHit.distance;
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * PlayyerMidleGroundedHit.distance, Color.yellow);
         }
 
-        if(GroundDistance < m_groundedMinDistance) {
+        //Feet raycast check
+        RaycastHit LeftFeetHit;
+        RaycastHit RightFeetHit;
+        if (Physics.Raycast(m_LeftFeet.position, transform.TransformDirection(Vector3.down), out LeftFeetHit)) {
+            m_LFGroundDistance = LeftFeetHit.distance;
+            Debug.DrawRay(m_LeftFeet.position, transform.TransformDirection(Vector3.down) * LeftFeetHit.distance, Color.cyan);
+        }
+        
+        if (Physics.Raycast(m_RightFeet.position, transform.TransformDirection(Vector3.down), out RightFeetHit)) {
+            m_RFGroundDistance = RightFeetHit.distance;
+            Debug.DrawRay(m_RightFeet.position, transform.TransformDirection(Vector3.down) * RightFeetHit.distance, Color.cyan);
+        }
+
+        if (m_LFGroundDistance < m_FeetGroundMinDistance || m_RFGroundDistance < m_FeetGroundMinDistance) {
+            m_FeetRayCastGrounded = true;
+        }
+        else {
+            m_FeetRayCastGrounded = false;
+        }
+
+        if (m_GroundDistance < m_GroundedMinDistance) {
             m_RayCastGrounded = true;
         }
         else
@@ -332,6 +400,13 @@ public class RootMotionMovement : MonoBehaviour
         }
         
         m_IsGrounded = m_CharacterController.isGrounded;
+
+        if(m_RayCastGrounded || m_CharacterController.isGrounded || m_FeetRayCastGrounded) {
+            m_FinalGrounded = true;
+        }
+        else {
+            m_FinalGrounded = false;
+        }
     }
 
    
