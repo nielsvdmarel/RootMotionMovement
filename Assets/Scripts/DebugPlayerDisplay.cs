@@ -1,11 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEditor;
 using TMPro;
 
 public class DebugPlayerDisplay : MonoBehaviour
 {
+    [Header("Input")]
+    [SerializeField]
+    public InputAction DebugControl;
+
+    [Header("Debug system Enabled")] 
+    public bool m_Enabled;
+
     private RootMotionMovement m_RootMotionMovement;
     private bool b_PlayerDebugEnabled = false;
     private List<GameObject> m_AllDebugUIElements;
@@ -35,6 +43,14 @@ public class DebugPlayerDisplay : MonoBehaviour
     public class WireArcExample : MonoBehaviour
     {
         public float shieldArea;
+    }
+
+    private void OnEnable() {
+        DebugControl.Enable();
+    }
+
+    private void OnDisable() {
+        DebugControl.Disable();
     }
 
     void Start() {

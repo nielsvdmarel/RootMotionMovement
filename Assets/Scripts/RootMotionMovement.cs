@@ -22,7 +22,7 @@ public class RootMotionMovement : MonoBehaviour
     [SerializeField]
     public InputAction playerControls;
     [SerializeField]
-    public InputAction isRunning;
+    public InputAction m_IsRunning;
     public InputAction m_JumpControls;
 
     public Vector2 m_Input2D;
@@ -129,13 +129,13 @@ public class RootMotionMovement : MonoBehaviour
     }
     private void OnEnable() {
         playerControls.Enable();
-        isRunning.Enable();
+        m_IsRunning.Enable();
         m_JumpControls.Enable();
     }
 
     private void OnDisable() {
         playerControls.Disable();
-        isRunning.Disable();
+        m_IsRunning.Disable();
         m_JumpControls.Disable();
     }
 
@@ -323,7 +323,7 @@ public class RootMotionMovement : MonoBehaviour
     /// Function to read values of the running input, using the new input system
     /// </summary>
     void HandleRunningInput() {
-        if (isRunning.ReadValue<float>() == 1) {
+        if (m_IsRunning.ReadValue<float>() == 1) {
             m_PlayerRunning = true;
         }
         else {
