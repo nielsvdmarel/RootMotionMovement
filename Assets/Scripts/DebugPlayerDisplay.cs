@@ -11,9 +11,6 @@ public class DebugPlayerDisplay : MonoBehaviour
     [SerializeField]
     public InputAction DebugControl;
 
-    [Header("Debug system Enabled")] 
-    public bool m_Enabled;
-
     private RootMotionMovement m_RootMotionMovement;
     private bool b_PlayerDebugEnabled = false;
     private List<GameObject> m_AllDebugUIElements;
