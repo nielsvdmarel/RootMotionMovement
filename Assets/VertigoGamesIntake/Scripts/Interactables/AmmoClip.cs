@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoClip : MonoBehaviour
+public class AmmoClip : InteractAble 
 {
     // Start is called before the first frame update
     void Start()
