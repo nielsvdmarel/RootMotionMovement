@@ -199,13 +199,12 @@ public class RootMotionMovement : MonoBehaviour
         m_Input2D = playerControls.ReadValue<Vector2>();
         m_Input = new Vector3(m_Input2D.y, m_Input2D.x, 0);
 
-        float target_rotation_ = Mathf.Atan2(m_Input2D.x, m_Input2D.y) * Mathf.Rad2Deg; // + mainCamera.transform.eulerAngles.y;
+        float target_rotation_ = Mathf.Atan2(m_Input2D.x, m_Input2D.y) * Mathf.Rad2Deg;
         Vector3 InputTargetRotation = new Vector3(0, target_rotation_, 0);
 
         float rotationX;
         float rotationY;
         float rotationZ;
-
         rotationX = m_Camera.transform.eulerAngles.x;
         rotationY = m_Camera.transform.eulerAngles.y;
         rotationZ = m_Camera.transform.eulerAngles.z;
@@ -213,14 +212,14 @@ public class RootMotionMovement : MonoBehaviour
         Vector3 trueCamRotation = new Vector3(WrapAngle(rotationX), WrapAngle(rotationY), WrapAngle(rotationZ));
         trueCamRotation.x *= -1;
 
-        //Vector3 truePlayerRotation = transform.eulerAngles;
-        Vector3 truePlayerRotation = new Vector3(WrapAngle(transform.eulerAngles.x), WrapAngle(transform.eulerAngles.y), WrapAngle(transform.eulerAngles.z));
+        Vector3 truePlayerRotation = new Vector3(WrapAngle(transform.eulerAngles.x),
+        WrapAngle(transform.eulerAngles.y), WrapAngle(transform.eulerAngles.z));
 
-        Vector3 test = truePlayerRotation - trueCamRotation;
+        Vector3 PlayerCamRotation = truePlayerRotation - trueCamRotation;
         Vector3 CamAndPlayer;
-        CamAndPlayer.x = WrapAngle(test.x);
-        CamAndPlayer.y = WrapAngle(test.y);
-        CamAndPlayer.z = WrapAngle(test.z);
+        CamAndPlayer.x = WrapAngle(PlayerCamRotation.x);
+        CamAndPlayer.y = WrapAngle(PlayerCamRotation.y);
+        CamAndPlayer.z = WrapAngle(PlayerCamRotation.z);
 
         Vector3 InputCamPlayer = InputTargetRotation - CamAndPlayer;
         Vector3 FinalDelta;
@@ -230,7 +229,6 @@ public class RootMotionMovement : MonoBehaviour
 
         m_DesiredDirection = FinalDelta.y;
 
-        //Calculate normalized direction rotation, used for idle rotation direction
         if (m_DesiredDirection > 0) {
             m_NormalizedRotationDirection = 1;
         }

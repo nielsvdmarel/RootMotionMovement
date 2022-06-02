@@ -8,11 +8,9 @@ using TMPro;
 public class DebugPlayerDisplay : MonoBehaviour
 {
     [Header("Input")]
-    [SerializeField]
     public InputAction DebugControl;
 
-    [Header("Debug system Enabled")] 
-    public bool m_Enabled;
+    
 
     private RootMotionMovement m_RootMotionMovement;
     private bool b_PlayerDebugEnabled = false;
@@ -24,12 +22,14 @@ public class DebugPlayerDisplay : MonoBehaviour
     public TextMeshProUGUI m_PlayerIsGroundedText;
     public TextMeshProUGUI m_PlayerRaycastIsGroundedText;
     public TextMeshProUGUI m_PlayerFinalGroundedText;
+    public TextMeshProUGUI m_InputDirectionText;
 
     [Header("Main player variables")]
     public TextMeshProUGUI DesiredDirectionValue;
     public TextMeshProUGUI m_PlayerIsGroundedValue;
     public TextMeshProUGUI m_PlayerRaycastIsGroundedValue;
     public TextMeshProUGUI m_PlayerFinalGroundedValue;
+    public TextMeshProUGUI m_InputDirectionValue;
 
     [Header("Player indicator arrows")]
     [SerializeField]
@@ -68,6 +68,8 @@ public class DebugPlayerDisplay : MonoBehaviour
         m_AllDebugUIElements.Add(m_PlayerRaycastIsGroundedValue.gameObject);
         m_AllDebugUIElements.Add(m_PlayerFinalGroundedText.gameObject);
         m_AllDebugUIElements.Add(m_PlayerFinalGroundedValue.gameObject);
+        m_AllDebugUIElements.Add(m_InputDirectionText.gameObject);
+        m_AllDebugUIElements.Add(m_InputDirectionValue.gameObject);
 
         m_RootMotionMovement = this.GetComponent<RootMotionMovement>();
         if (m_RootMotionMovement != null) {
@@ -93,6 +95,8 @@ public class DebugPlayerDisplay : MonoBehaviour
 
             m_PlayerFinalGroundedValue.text = m_RootMotionMovement.m_FinalGrounded.ToString();
             SetTextColorOnBoolean(m_PlayerFinalGroundedValue, m_RootMotionMovement.m_FinalGrounded);
+
+            m_InputDirectionValue.text = m_RootMotionMovement.m_Input2D.ToString();
 
             //Arrows
             UpdateDirectionalArrow();
