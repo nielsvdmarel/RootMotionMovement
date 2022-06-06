@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 1481.7754, g: 1835.8867, b: 2430.4492, a: 1}
+  m_IndirectSpecularColor: {r: 1481.7451, g: 1835.5391, b: 2429.8105, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -16744,7 +16744,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1103159054}
-  m_LocalRotation: {x: 0.07188016, y: 0.000000017161872, z: -0.0000000012367973, w: 0.9974133}
+  m_LocalRotation: {x: 0.07188016, y: -0.000000017161872, z: 0.0000000012367973, w: 0.9974133}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -25507,6 +25507,23 @@ MonoBehaviour:
       m_Action: Jump Controls
       m_Flags: 0
     m_Flags: 0
+  m_WalkTrigger:
+    m_Name: Walk Trigger
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 02cd4a34-0541-4c43-9684-294e43dd7dda
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: f672c778-4d0d-424c-b7b0-5478d8dedf34
+      m_Path: <Keyboard>/1
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Walk Trigger
+      m_Flags: 0
+    m_Flags: 0
   m_Input2D: {x: 0, y: 0}
   m_Input: {x: 0, y: 0, z: 0}
   m_DesiredDirection: 0
@@ -25522,7 +25539,7 @@ MonoBehaviour:
   m_EnableCustomRotation: 1
   m_DesiredManualRotation: {x: 0, y: 0, z: 0}
   m_RotationSpeed: 8
-  m_InPlaceTurnsEnabled: 1
+  m_InPlaceTurnsEnabled: 0
   m_IdleRotation: 0
   m_RotationSet: 0
   m_IsGrounded: 0
@@ -25534,6 +25551,7 @@ MonoBehaviour:
   m_GroundDistance: 0
   m_LFGroundDistance: 0
   m_RFGroundDistance: 0
+  m_CanWalk: 0
   m_GroundedMinDistance: 0.25
   m_FeetGroundMinDistance: 0.35
   m_IsJumping: 0
@@ -25589,7 +25607,6 @@ MonoBehaviour:
       m_Action: Debug Control
       m_Flags: 0
     m_Flags: 0
-  m_Enabled: 0
   HeaderText: {fileID: 1313826156}
   DesiredDirectionText: {fileID: 520870619}
   m_PlayerIsGroundedText: {fileID: 1876936337}
@@ -29020,7 +29037,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813490176}
-  m_LocalRotation: {x: 0.089962855, y: 0.000000017431809, z: -0.0000000015212702, w: 0.99594516}
+  m_LocalRotation: {x: 0.089962855, y: 0.000000017431807, z: -0.0000000015212326, w: 0.99594516}
   m_LocalPosition: {x: -2.501, y: 5.692, z: -9.785}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

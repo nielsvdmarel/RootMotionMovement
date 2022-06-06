@@ -24,6 +24,7 @@ public class RootMotionMovement : MonoBehaviour
     [SerializeField]
     public InputAction m_IsRunning;
     public InputAction m_JumpControls;
+    public InputAction m_WalkTrigger;
 
     public Vector2 m_Input2D;
     [SerializeField]
@@ -104,6 +105,9 @@ public class RootMotionMovement : MonoBehaviour
     private float m_RFGroundDistance;
 
     [SerializeField]
+    private bool m_CanWalk = false;
+
+    [SerializeField]
     private float m_GroundedMinDistance;
 
     [SerializeField]
@@ -131,12 +135,14 @@ public class RootMotionMovement : MonoBehaviour
         playerControls.Enable();
         m_IsRunning.Enable();
         m_JumpControls.Enable();
+        m_WalkTrigger.Enable();
     }
 
     private void OnDisable() {
         playerControls.Disable();
         m_IsRunning.Disable();
         m_JumpControls.Disable();
+        m_WalkTrigger.Disable();
     }
 
     void Update() {
@@ -151,7 +157,9 @@ public class RootMotionMovement : MonoBehaviour
 
         UpdateAnimator(); //Updating the animator with all the calculated variables.
 
-       
+        if (m_WalkTrigger.WasReleasedThisFrame()) {
+            m_CanWalk = !m_CanWalk;
+        }
     }
 
     private void FixedUpdate()
@@ -242,7 +250,10 @@ public class RootMotionMovement : MonoBehaviour
 
     public void CalculateInputMovementSpeed() {
         m_PlayerSpeed = Mathf.Clamp(Mathf.Abs(m_Input2D.x) + Mathf.Abs(m_Input2D.y), 0, 1);
-        //m_PlayerSpeed -= 0.5f; to walk
+        if (m_CanWalk) {
+            m_PlayerSpeed -= 0.5f;
+        }
+       
         if (m_PlayerRunning) {
             m_PlayerSpeed *= 2;
         }
@@ -299,18 +310,13 @@ public class RootMotionMovement : MonoBehaviour
     /// <summary>
     /// Functionality behind handling the in place idle turns
     /// </summary>
-    void HandleIdleTurns()
-    {
-        if (m_InPlaceTurnsEnabled)
-        {
-            if (m_Input2D.x == 0 || m_Input2D.y == 0)
-            {
-                if (Mathf.Abs(m_DesiredDirection) >= 90.0f)
-                {
+    void HandleIdleTurns() {
+        if (m_InPlaceTurnsEnabled) {
+            if (m_Input2D.x == 0 || m_Input2D.y == 0) {
+                if (Mathf.Abs(m_DesiredDirection) >= 90.0f) {
                     m_Animator.SetBool("TurnInPlace", true);
                 }
-                else
-                {
+                else {
                     m_Animator.SetBool("TurnInPlace", false);
                 }
             }
