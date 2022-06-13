@@ -6,16 +6,26 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class InteractAble : MonoBehaviour {
     
-    public Collider ObjectCollider;
+    public Collider m_ObjectCollider;
+    public Rigidbody m_Rigidbody;
 
     [SerializeField]
     private float m_PickupRange;
-    void Start() {
-        
+
+    protected void Start() {
+        m_ObjectCollider = this.GetComponent<SphereCollider>();
+        m_Rigidbody = this.GetComponent<Rigidbody>();
     }
 
-    void Update() {
+    protected void Update() {
         
+    }
+    public void EquipInteractable(GameObject parent) {
+        m_Rigidbody.useGravity = false;
+        m_Rigidbody.isKinematic = true;
+        transform.SetParent(parent.transform, false);
+        transform.position = parent.transform.position;
+        transform.rotation = parent.transform.rotation;
     }
 
     //responsible for picking up items.
