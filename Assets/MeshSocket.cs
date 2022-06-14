@@ -5,14 +5,14 @@ using UnityEngine;
 public class MeshSocket : MonoBehaviour
 {
     public MeshSockets.SocketId m_SocketId;
-    Transform attachPoint;
+    Transform m_AttachPoint;
    
     void Start() {
-        attachPoint = transform.GetChild(0);
+        m_AttachPoint = transform.GetChild(0);
     }
 
     public void Attach(Transform objectTransform) {
-        objectTransform.SetParent(attachPoint, false);
+        objectTransform.SetParent(m_AttachPoint, false);
     }
 
 }

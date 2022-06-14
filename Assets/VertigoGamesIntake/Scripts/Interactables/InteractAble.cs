@@ -15,6 +15,7 @@ public class InteractAble : MonoBehaviour {
     protected void Start() {
         m_ObjectCollider = this.GetComponent<SphereCollider>();
         m_Rigidbody = this.GetComponent<Rigidbody>();
+       
     }
 
     protected void Update() {
@@ -23,9 +24,12 @@ public class InteractAble : MonoBehaviour {
     public void EquipInteractable(GameObject parent) {
         m_Rigidbody.useGravity = false;
         m_Rigidbody.isKinematic = true;
-        transform.SetParent(parent.transform, false);
+        transform.SetParent(parent.transform, true);
         transform.position = parent.transform.position;
         transform.rotation = parent.transform.rotation;
+        foreach (var colider in GetComponentsInChildren<BoxCollider>()) {
+            colider.enabled = false;
+        }    
     }
 
     //responsible for picking up items.

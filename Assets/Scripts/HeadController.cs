@@ -10,8 +10,7 @@ public class HeadController : MonoBehaviour
     RootMotionMovement m_RootMotionMovement;
 
     [Header("Animation variables")]
-    [SerializeField]
-    private bool m_IkActive;
+    public bool m_IkActive;
     [SerializeField]
     private float m_lookWeight = 2f;
     [SerializeField]
