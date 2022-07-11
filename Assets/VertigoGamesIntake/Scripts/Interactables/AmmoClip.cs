@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AmmoClip : InteractAble 
 {
+
     // Start is called before the first frame update
     void Start() {
         base.Start();
@@ -16,7 +17,6 @@ public class AmmoClip : InteractAble
 
     public override void EquipInteractable(GameObject player, GameObject attachObject) {
         base.EquipInteractable(player, attachObject);
-        transform.localPosition = Vector3.zero;
         Debug.Log("Ammo clip pickedup");
         //Gets the player interaction reference. 
     }

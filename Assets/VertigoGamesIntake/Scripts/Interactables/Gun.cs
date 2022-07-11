@@ -5,7 +5,11 @@ using UnityEngine;
 public class Gun : InteractAble
 {
     [SerializeField]
+    private string m_AttachmentAimingPointName;
+
+    [SerializeField]
     DebugDrawLine m_DebugDrawLine;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,15 +25,6 @@ public class Gun : InteractAble
 
     public override void EquipInteractable(GameObject player, GameObject attachObject) {
         base.EquipInteractable(player, attachObject);
-
-        if(m_PlayerReference != null) {
-            PlayerInteractionScript playerInteractionScript = m_PlayerReference.GetComponent<PlayerInteractionScript>();
-            //transform.SetParent(playerInteractionScript. m_RightHand.transform, false);
-            transform.localPosition = playerInteractionScript.m_GunRightIdleOffset.localPosition;
-            transform.localEulerAngles = playerInteractionScript.m_GunRightIdleOffset.localEulerAngles;
-            //transform.root.FindChild("dsds").transform.localPosition.x;
-        }
-
         Debug.Log("gun pickedup");
        
 

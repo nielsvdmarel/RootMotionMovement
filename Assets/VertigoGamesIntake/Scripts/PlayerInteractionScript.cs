@@ -29,13 +29,8 @@ public class PlayerInteractionScript : MonoBehaviour
     public InputAction m_RightHandPickupKey;
     public InputAction m_LeftHandPickupKey;
     public InputAction m_HeadPickupKey;
-
-    [Header("Interactable Placement offset")]
-    public Transform m_GunRightAimingOffset;
-    public Transform m_GunRightIdleOffset;
-    public Transform m_hatOffset;
-    public Transform m_GunLeftAimingOffset;
-    public Transform m_GunLeftIdleOffset;
+    public InputAction m_InteractKey;
+    public InputAction m_PreInteractKey;
 
     [Header("Interactable placement objects")]
     public GameObject m_LeftHand;
@@ -57,12 +52,16 @@ public class PlayerInteractionScript : MonoBehaviour
         m_RightHandPickupKey.Enable();
         m_LeftHandPickupKey.Enable();
         m_HeadPickupKey.Enable();
+        m_InteractKey.Enable();
+        m_PreInteractKey.Enable();
     }
 
     private void OnDisable() {
         m_RightHandPickupKey.Disable();
         m_LeftHandPickupKey.Disable();
         m_HeadPickupKey.Disable();
+        m_InteractKey.Disable();
+        m_PreInteractKey.Disable();
     }
 
     private void Awake() {
@@ -71,7 +70,7 @@ public class PlayerInteractionScript : MonoBehaviour
     }
 
     private void Start() {
-       
+     
     }
 
     void Update() {
@@ -90,10 +89,20 @@ public class PlayerInteractionScript : MonoBehaviour
         if (m_HeadPickupKey.WasPressedThisFrame()) {
             CheckPickUpDrop(ref m_HeadInteractable, m_Head, m_CanPickupWithHead);
         }
+
+        if (m_InteractKey.WasPressedThisFrame()) {
+            //Interact with active interactables
+            CheckInteraction();
+        }
+
+        if (m_PreInteractKey.WasPressedThisFrame()) {
+            //Possibly pre interact for active interacbles
+            CheckPreInteraction();
+        }
         UpdateUIElementsPosition();
     }
 
-    void CheckPickUpDrop(ref GameObject activeInteractableInSlot, GameObject holderObject, bool canPikcup) {
+    void CheckPickUpDrop(ref GameObject activeInteractableInSlot, GameObject attachObject, bool canPikcup) {
         //first we check the logic for dropping Interactables
         if (activeInteractableInSlot != null) {
             DropInteractable(activeInteractableInSlot.gameObject);
@@ -107,7 +116,7 @@ public class PlayerInteractionScript : MonoBehaviour
             if (m_ActiveTriggeredInteractable != null) {
                 if (!m_ActiveTriggeredInteractable.GetComponent<InteractAble>().m_Equiped) {
                     //Pickup item
-                    PickupInteractable(m_ActiveTriggeredInteractable, holderObject);
+                    PickupInteractable(m_ActiveTriggeredInteractable, attachObject);
                     activeInteractableInSlot = m_ActiveTriggeredInteractable;
                 }
             }
@@ -144,6 +153,24 @@ public class PlayerInteractionScript : MonoBehaviour
         m_LeftHandInteractionRect.position = Camera.main.WorldToScreenPoint(m_LeftHand.transform.position);
         m_RightHandInteractionRect.position = Camera.main.WorldToScreenPoint(m_RightHand.transform.position);
         m_HeadInteractionRect.position = Camera.main.WorldToScreenPoint(m_Head.transform.position);
+    }
+
+    void CheckInteraction() {
+        if(m_LeftHandInteractable != null) {
+            m_LeftHandInteractable.GetComponent<InteractAble>().Interact();
+        }
+
+        if(m_RightHandInteractable != null) {
+            m_RightHandInteractable.GetComponent<InteractAble>().Interact();
+        }
+
+        if(m_HeadInteractable != null) {
+            m_HeadInteractable.GetComponent<InteractAble>().Interact();
+        }
+    }
+
+    void CheckPreInteraction() {
+
     }
 
     /// <summary>
@@ -194,6 +221,30 @@ public class PlayerInteractionScript : MonoBehaviour
                     m_CanPickupWithHead = true;
                     m_CanPickupWithLHand = false;
                     m_CanPickupWithRHand = false;
+                }
+                break;
+            case "Rock":
+                {
+                    Debug.Log("Rock found");
+                    m_RightHandInteractionRect.gameObject.SetActive(true);
+                    m_LeftHandInteractionRect.gameObject.SetActive(true);
+                    m_HeadInteractionRect.gameObject.SetActive(false);
+
+                    m_CanPickupWithHead = false;
+                    m_CanPickupWithLHand = true;
+                    m_CanPickupWithRHand = true;
+                }
+                break;
+            case "FlashLight":
+                {
+                    Debug.Log("FlashLight found");
+                    m_RightHandInteractionRect.gameObject.SetActive(true);
+                    m_LeftHandInteractionRect.gameObject.SetActive(true);
+                    m_HeadInteractionRect.gameObject.SetActive(false);
+
+                    m_CanPickupWithHead = false;
+                    m_CanPickupWithLHand = true;
+                    m_CanPickupWithRHand = true;
                 }
                 break;
             default:

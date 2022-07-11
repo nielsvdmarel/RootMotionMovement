@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DebugCanvas
   - Ground
+  - hat1Offset
   layers:
   - Default
   - TransparentFX

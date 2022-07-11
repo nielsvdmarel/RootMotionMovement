@@ -15,10 +15,6 @@ public class Hat : InteractAble
     }
     public override void EquipInteractable(GameObject player, GameObject attachObject) {
         base.EquipInteractable(player, attachObject);
-        if (m_PlayerReference != null) {
-            PlayerInteractionScript playerInteractionScript = m_PlayerReference.GetComponent<PlayerInteractionScript>();
-            transform.localPosition = playerInteractionScript.m_hatOffset.localPosition;
-            transform.localEulerAngles = playerInteractionScript.m_hatOffset.localEulerAngles;
-        }
+        Debug.Log("hat pickedup");
     }
 }
