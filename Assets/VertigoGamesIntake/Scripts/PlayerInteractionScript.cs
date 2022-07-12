@@ -48,6 +48,10 @@ public class PlayerInteractionScript : MonoBehaviour
     [SerializeField]
     bool m_InRangeOfInteractable = false;
 
+    //Needed set active pickup variables, used when animation event is triggered
+    private GameObject m_ToBePickedUpInteractable = null;
+    private GameObject m_ToBeUsedAttachObject = null;
+
     private void OnEnable() {
         m_RightHandPickupKey.Enable();
         m_LeftHandPickupKey.Enable();
@@ -124,7 +128,20 @@ public class PlayerInteractionScript : MonoBehaviour
     }
 
     void PickupInteractable(GameObject interactAble, GameObject attachObject) {
-        interactAble.GetComponent<InteractAble>().EquipInteractable(this.gameObject, attachObject);
+        if(attachObject == m_Head) {
+            this.GetComponent<Animator>().SetTrigger("LeftHandPickup");
+        }
+        else if(attachObject == m_LeftHand) {
+            this.GetComponent<Animator>().SetTrigger("LeftHandPickup");
+        }
+
+        else if (attachObject == m_RightHand) {
+            this.GetComponent<Animator>().SetTrigger("RightHandPickup");
+        }
+
+
+        m_ToBePickedUpInteractable = interactAble;
+        m_ToBeUsedAttachObject = attachObject;
     }
 
     void DropInteractable(GameObject interactAble) {
@@ -171,6 +188,13 @@ public class PlayerInteractionScript : MonoBehaviour
 
     void CheckPreInteraction() {
 
+    }
+
+    /// <summary>
+    /// logic for actually pickuping up the requested interactable after pikcup animation point has been reached 
+    /// </summary>
+    void AnimPickupItem() {
+        m_ToBePickedUpInteractable.GetComponent<InteractAble>().EquipInteractable(this.gameObject, m_ToBeUsedAttachObject);
     }
 
     /// <summary>
