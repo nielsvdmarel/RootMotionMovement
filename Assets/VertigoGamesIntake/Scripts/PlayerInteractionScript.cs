@@ -29,8 +29,8 @@ public class PlayerInteractionScript : MonoBehaviour
     public InputAction m_RightHandPickupKey;
     public InputAction m_LeftHandPickupKey;
     public InputAction m_HeadPickupKey;
-    public InputAction m_InteractKey;
-    public InputAction m_PreInteractKey;
+    public InputAction m_LeftMouseButtonKey;
+    public InputAction m_RightMouseButtonKey;
 
     [Header("Interactable placement objects")]
     public GameObject m_LeftHand;
@@ -52,20 +52,28 @@ public class PlayerInteractionScript : MonoBehaviour
     private GameObject m_ToBePickedUpInteractable = null;
     private GameObject m_ToBeUsedAttachObject = null;
 
+    private bool m_IsAiming = false;
+
+    private enum InteractableCombos {
+        NoCombo,
+        WeaponAmmoClip,
+        AmmoClipBullets
+    }
+
     private void OnEnable() {
         m_RightHandPickupKey.Enable();
         m_LeftHandPickupKey.Enable();
         m_HeadPickupKey.Enable();
-        m_InteractKey.Enable();
-        m_PreInteractKey.Enable();
+        m_LeftMouseButtonKey.Enable();
+        m_RightMouseButtonKey.Enable();
     }
 
     private void OnDisable() {
         m_RightHandPickupKey.Disable();
         m_LeftHandPickupKey.Disable();
         m_HeadPickupKey.Disable();
-        m_InteractKey.Disable();
-        m_PreInteractKey.Disable();
+        m_LeftMouseButtonKey.Disable();
+        m_RightMouseButtonKey.Disable();
     }
 
     private void Awake() {
@@ -94,14 +102,14 @@ public class PlayerInteractionScript : MonoBehaviour
             CheckPickUpDrop(ref m_HeadInteractable, m_Head, m_CanPickupWithHead);
         }
 
-        if (m_InteractKey.WasPressedThisFrame()) {
+        if (m_LeftMouseButtonKey.WasPressedThisFrame()) {
             //Interact with active interactables
             CheckInteraction();
         }
 
-        if (m_PreInteractKey.WasPressedThisFrame()) {
+        if (m_RightMouseButtonKey.WasPressedThisFrame()) {
             //Possibly pre interact for active interacbles
-            CheckPreInteraction();
+
         }
         UpdateUIElementsPosition();
     }
@@ -173,17 +181,63 @@ public class PlayerInteractionScript : MonoBehaviour
     }
 
     void CheckInteraction() {
+       InteractAble[] allActiveInteractables = new InteractAble[] {null, null, null };
+
+        //Checking and setting temp activatable interactables
         if(m_LeftHandInteractable != null) {
-            m_LeftHandInteractable.GetComponent<InteractAble>().Interact();
+            allActiveInteractables[0] = m_LeftHandInteractable.GetComponent<InteractAble>();
+            //m_LeftHandInteractable.GetComponent<InteractAble>().Interact();
         }
 
         if(m_RightHandInteractable != null) {
-            m_RightHandInteractable.GetComponent<InteractAble>().Interact();
+            allActiveInteractables[1] = m_RightHandInteractable.GetComponent<InteractAble>();
+           // m_RightHandInteractable.GetComponent<InteractAble>().Interact();
         }
 
         if(m_HeadInteractable != null) {
-            m_HeadInteractable.GetComponent<InteractAble>().Interact();
+            allActiveInteractables[2] = m_HeadInteractable.GetComponent<InteractAble>();
+           // m_HeadInteractable.GetComponent<InteractAble>().Interact();
         }
+
+        //Doing all solo interactings, without limitations (flaslight)
+        for (int i = 0; i < allActiveInteractables.Length; i++) {
+            if(allActiveInteractables[i] != null) {
+                allActiveInteractables[i].Interact();
+            } 
+        }
+
+        //Shared functionality:
+        if(allActiveInteractables[0] != null && allActiveInteractables[1] != null) {
+            if(CheckInteractablePairs(ref allActiveInteractables[0], ref allActiveInteractables[1]) == (int)InteractableCombos.WeaponAmmoClip) {
+
+            }
+        }
+
+        //at least 1 hand is empty.
+        if(m_LeftHandInteractable == null || m_RightHandInteractable == null) {
+            if(m_LeftHandInteractable != null) {
+                //Rock throwing right hand
+
+                //Gun aiming start right hand
+
+                // 
+            }
+            if(m_RightHandInteractable != null)
+            {
+
+            }
+        } 
+    }
+
+    int CheckInteractablePairs(ref InteractAble lefthandInt, ref InteractAble rightHand) {
+        if (lefthandInt.GetType().ToString() == "Gun" || rightHand.GetType().ToString() == "Gun") {
+            if (lefthandInt.GetType().ToString() == "AmmoClip" || rightHand.GetType().ToString() == "AmmoClip")
+            {
+                Debug.Log(" combo found");
+                return (int)InteractableCombos.WeaponAmmoClip;
+            }
+        }
+        return 0;
     }
 
     void CheckPreInteraction() {

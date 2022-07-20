@@ -18561,7 +18561,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112845729}
-  m_LocalRotation: {x: 0.10806369, y: -0.000000017105624, z: 0.0000000018593854, w: 0.994144}
+  m_LocalRotation: {x: 0.10806369, y: 0.000000017105618, z: -0.0000000018593849, w: 0.994144}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -27929,38 +27929,38 @@ MonoBehaviour:
       m_Action: Head Pickup Key
       m_Flags: 0
     m_Flags: 0
-  m_InteractKey:
-    m_Name: Interact Key
+  m_LeftMouseButtonKey:
+    m_Name: Left Mouse Button Key
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 130ea413-bc77-4198-acf7-8ed18a7fcee2
+    m_Id: ad44e299-06f2-4df9-87a0-6bcbd21cb58e
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: e472c1f7-b34d-4587-be12-ff7e1b25d391
+      m_Id: 12194d1c-562d-462a-be59-f920008a8c41
       m_Path: <Mouse>/leftButton
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Interact Key
+      m_Action: Left Mouse Button Key
       m_Flags: 0
     m_Flags: 0
-  m_PreInteractKey:
-    m_Name: Pre Interact Key
+  m_RightMouseButtonKey:
+    m_Name: Right Mouse Button Key
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 048d222f-8d0a-4401-9539-fa5c8038f154
+    m_Id: 347154ec-6eac-4096-8f57-1120abfbee34
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: ad56ec37-2e58-432d-bf4c-55ec2b861bce
+      m_Id: 2490871e-592f-419a-bf58-53200d7888a4
       m_Path: <Mouse>/rightButton
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Pre Interact Key
+      m_Action: Right Mouse Button Key
       m_Flags: 0
     m_Flags: 0
   m_LeftHand: {fileID: 111777309}
@@ -31722,7 +31722,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813490176}
-  m_LocalRotation: {x: 0.089962855, y: 0.000000017431814, z: -0.0000000015212702, w: 0.99594516}
+  m_LocalRotation: {x: 0.089962855, y: -0.000000017431807, z: 0.0000000015212326, w: 0.99594516}
   m_LocalPosition: {x: -2.501, y: 5.692, z: -9.785}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -38908,7 +38908,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2103295291}
-  m_LocalRotation: {x: 0.089962855, y: 0.000000017136614, z: -0.0000000015479353, w: 0.99594516}
+  m_LocalRotation: {x: 0.089962855, y: -0.00000001713661, z: 0.000000001547935, w: 0.99594516}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
